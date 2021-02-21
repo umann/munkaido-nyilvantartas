@@ -1,0 +1,37 @@
+#MS:
+-aws        # allow perltidy to add whitespace (default)
+-bvtc=0     # closing brace vertical tightness:
+-ci=4       # sets continuation indentation=n,  default is n=2 spaces
+-cti=0      # closing indentation of paren, square bracket, or non-block brace:
+-dws        # delete all old non-essential whitespace
+-i=4        # use n columns per indentation level (default n=4)
+-l=80       # maximum line length;  default n=80
+-msc=2      # minimum desired spaces to side comment, default 4
+-nt         # no tabs: use n spaces per indentation level (default)
+-ole=unix   # specify output line ending (s=dos or win, mac, unix)
+-pt=2       # paren tightness (n=0, 1 or 2)
+-pvt=2      # paren vertical tightness (see -bvt for n)
+-pvtc=0     # closing paren vertical tightness, see -bvtc for n.
+-sbc        # use 'static block comments' identified by leading '##' (default)
+-sbvt=0     # square bracket vertical tightness (see -bvt for n)
+-sbvtc=0    # closing square bracket vertical tightness, see -bvtc for n.
+-ssc        # use 'static side comments' identified by leading '##' (default)
+-vtc=0      # vertical tightness of closing container; n controls if closing
+-se         # Errors to STDERR
+#-st         # Output to STDOUT
+
+#PBP:
+#-bbt=1      # Medium block brace tightness
+#-bt=1       # Medium brace tightness
+#-ci=4       # Continuation indent is 4 cols
+#-cti=0      # No extra indentation for closing brackets
+#-i=4        # Indent level is 4 cols
+#-l=80       # Max line width 
+#-nolq       # Don't outdent long quoted strings
+#-nsfs       # No space before semicolons
+#-pt=1       # Medium parenthesis tightness
+#-sbt=1      # Medium square bracket tightness
+#-se         # Errors to STDERR
+#-st         # Output to STDOUT
+#-vt=2       # Maximal vertical tightness
+#-wbb="% + - * / x != == >= <= =~ !~ < > | & >= < = **= += *= &= <<= &&= -= /= |= >>= ||= .= %= ^= x="

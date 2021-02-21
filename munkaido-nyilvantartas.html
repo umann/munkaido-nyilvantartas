@@ -37,6 +37,25 @@
 
     <h1>Munkaidő-nyilvántartó</h1>
 
+    <p>Ezzel a programmal előállítható a cég havi munkaidő-nyilvántartása az alábbi bemenő adatokból:</p>
+    <ul>
+        <li>Általános:
+            <ul>
+                <li>munkaszüneti nap</li>
+                <li>áthelyezett pihenőnap</li>
+                <li>áthelyezett munkanap</li>
+            </ul>
+        </li>
+        <li>Dolgozónként:
+            <ul>
+                <li>normál munkarend</li>
+                <li>túlóra (szombati)</li>
+                <li>szabadság</li>
+                <li>táppénz</li>
+            </ul>
+        </li>
+    </ul>
+
     <h2>Jogi nyilatkozat</h2>
 
     <ol>
@@ -54,17 +73,21 @@
 
     <h2>Szabályok</h2>
 
-    <p>A fájlok nevében csak ezeket a karaktereket használd: - (<i>rövid kötőjel</i>) _ (<i>aláhúzás</i>) .
-        (<i>pont</i>) 0 1 2 3 4 5 6 7 8 9 (számjegyek) A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g
-        h i j k l m n o p q r s t u v w x y z (<i>ékezet nélküli [latin] kis- és nagybetűk</i>)</p>
+    <p>A fájlok nevében csak ezeket a karaktereket használd: - <i>(rövid kötőjel)</i> _ <i>(aláhúzás)</i> .
+        <i>(pont)</i> 0 1 2 3 4 5 6 7 8 9 <i>(számjegyek)</i> A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c
+        d e f g
+        h i j k l m n o p q r s t u v w x y z <i>(ékezet nélküli [latin] kis- és nagybetűk)</i>
+    </p>
 
     <p>Ne használj az <a href="#munkafuzet-formatumok">ebben a leírásban szereplőektől</a> eltérő munkafüzet/formátumot.
+    </p>
 
     <p>Ügyelj arra, hogy az Excel fájlokban ne szúrj be az elejére új oszlopot vagy sort, és máshol is csak az alább
         leírtak szerint módosíts.</p>
 
     <p>A bemeneti fájlokban dátumok <i>ÉÉÉÉ.HH.NN</i> vagy <i>ÉÉÉÉ-HH-NN</i> formátumúak legyenek. Az eredeményfájl
-        <i>ÉÉÉÉ.HH.NN</i>-t használ.</p>
+        <i>ÉÉÉÉ.HH.NN</i>-t használ.
+    </p>
 
     <h2>Fájlok</h2>
 
@@ -102,79 +125,84 @@
         <blockquote>
             <table cellspacing="0" border="1">
                 <tr>
-                    <td valign=middle align="center" bgcolor="silver"></td>
-                    <td valign=middle align="center" bgcolor="silver">A</td>
-                    <td valign=middle align="center" bgcolor="silver">B</td>
-                    <td valign=middle align="center" bgcolor="silver">C</td>
-                    <td valign=middle align="center" bgcolor="silver">D</td>
+                    <td valign="middle" align="center" bgcolor="silver"></td>
+                    <td valign="middle" align="center" bgcolor="silver">A</td>
+                    <td valign="middle" align="center" bgcolor="silver">B</td>
+                    <td valign="middle" align="center" bgcolor="silver">C</td>
+                    <td valign="middle" align="center" bgcolor="silver">D</td>
                 </tr>
                 <tr>
-                    <td valign=middle align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
-                    <td align="left" valign=top><b>paraméter</b></td>
-                    <td align="left" valign=top><b>érték</b></td>
-                    <td align="left" valign=top><b>magyarázat</b></td>
-                    <td align="left" valign=top><b>megjegyzés</b></td>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
+                    <td align="left" valign="top"><b>paraméter</b></td>
+                    <td align="left" valign="top"><b>érték</b></td>
+                    <td align="left" valign="top"><b>magyarázat</b></td>
+                    <td align="left" valign="top"><b>megjegyzés</b></td>
                 </tr>
                 <tr>
-                    <td valign=middle align="center" bgcolor="silver">&nbsp;2&nbsp;</td>
-                    <td align="left" valign=top><i>mappa</i></td>
-                    <td align="left" valign=top>
-                        <font color="red">C:\work\esziget\munkaido-nyilvantartas</font>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;2&nbsp;</td>
+                    <td align="left" valign="top"><i>mappa</i></td>
+                    <td align="left" valign="top">
+                        <font color="red">C:\Hintalo-legelteto_Kft\munkaido-nyilvantartas</font>
                     </td>
-                    <td align="left" valign=top>ahol az az alábbi fájlok vannak</td>
-                    <td align="left" valign=top>ha valamelyik fájlnál teljes elérési út szerepel, az felülírja
-                        ezt.<br>az első 4 munkalap lehet egy fájlban, mint most, vagy akár különbözőekben is.</td>
+                    <td align="left" valign="top">ahol az az alábbi fájlok vannak.
+                        <br>Ha ez relatív, (pl. .), akkor ennek a fájlnak a mappájához képest értendő
+                    </td>
+                    <td align="left" valign="top">ha valamelyik fájlnál teljes elérési út szerepel, az felülírja
+                        ezt.
+                        <br>az első 4 munkalap lehet egy fájlban, mint most, vagy akár különbözőekben is.
+                    </td>
                 </tr>
                 <tr>
-                    <td valign=middle align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
-                    <td align="left" valign=top><i>munkanaptár munkalapja</i></td>
-                    <td align="left" valign=top>munkaido-nyilvantartas.ADATOK.xls[munkanaptár]</td>
-                    <td align="left" valign=top>hivatalos munkaszüneti napok, áthelyezett munka- és pihenőnapok</td>
-                    <td align="left" valign=top>xls vagy xlsx</td>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
+                    <td align="left" valign="top"><i>munkanaptár munkalapja</i></td>
+                    <td align="left" valign="top">munkaido-nyilvantartas.ADATOK.xls[munkanaptár]</td>
+                    <td align="left" valign="top">hivatalos munkaszüneti napok, áthelyezett munka- és pihenőnapok</td>
+                    <td align="left" valign="top">xls vagy xlsx</td>
                 </tr>
                 <tr>
-                    <td valign=middle align="center" bgcolor="silver">&nbsp;4&nbsp;</td>
-                    <td align="left" valign=top><i>dolgozók munkalapja</i></td>
-                    <td align="left" valign=top>munkaido-nyilvantartas.ADATOK.xls[dolgozók]</td>
-                    <td align="left" valign=top>Minden dolgozó neve és összes névváltozatai és becenevei</td>
-                    <td align="left" valign=top>xls vagy xlsx</td>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;4&nbsp;</td>
+                    <td align="left" valign="top"><i>dolgozók munkalapja</i></td>
+                    <td align="left" valign="top">munkaido-nyilvantartas.ADATOK.xls[dolgozók]</td>
+                    <td align="left" valign="top">Minden dolgozó neve és összes névváltozatai és becenevei</td>
+                    <td align="left" valign="top">xls vagy xlsx</td>
                 </tr>
                 <tr>
-                    <td valign=middle align="center" bgcolor="silver">&nbsp;5&nbsp;</td>
-                    <td align="left" valign=top><i>hétköznapi munkaidő munkalapja</i></td>
-                    <td align="left" valign=top>munkaido-nyilvantartas.ADATOK.xls[hétköznap] </td>
-                    <td align="left" valign=top>Minden dolgozó általános hétköznapi munkarendje</td>
-                    <td align="left" valign=top>xls vagy xlsx</td>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;5&nbsp;</td>
+                    <td align="left" valign="top"><i>hétköznapi munkaidő munkalapja</i></td>
+                    <td align="left" valign="top">munkaido-nyilvantartas.ADATOK.xls[hétköznap] </td>
+                    <td align="left" valign="top">Minden dolgozó általános hétköznapi munkarendje</td>
+                    <td align="left" valign="top">xls vagy xlsx</td>
                 </tr>
                 <tr>
-                    <td valign=middle align="center" bgcolor="silver">&nbsp;6&nbsp;</td>
-                    <td align="left" valign=top><i>szombati munkaidő munkalapja</i></td>
-                    <td align="left" valign=top>munkaido-nyilvantartas.ADATOK.xls[szombat]</td>
-                    <td align="left" valign=top>Minden dolgozó minden egyes szombati ledolgozott munkaideje</td>
-                    <td align="left" valign=top>xls vagy xlsx</td>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;6&nbsp;</td>
+                    <td align="left" valign="top"><i>szombati munkaidő munkalapja</i></td>
+                    <td align="left" valign="top">munkaido-nyilvantartas.ADATOK.xls[szombat]</td>
+                    <td align="left" valign="top">Minden dolgozó minden egyes szombati ledolgozott munkaideje</td>
+                    <td align="left" valign="top">xls vagy xlsx</td>
                 </tr>
                 <tr>
-                    <td valign=middle align="center" bgcolor="silver">&nbsp;7&nbsp;</td>
-                    <td align="left" valign=top><i>szabadság-nyilvántartó kartonok munkafüzete</i></td>
-                    <td align="left" valign=top>Szabadsag_kartonok_{ÉÉÉÉ}.xlsx</td>
-                    <td align="left" valign=top sdnum="1033;0;#,##0.00">pl. Szabadsag_kartonok_2021.xlsx<br>szabadság és
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;7&nbsp;</td>
+                    <td align="left" valign="top"><i>szabadság-nyilvántartó kartonok munkafüzete</i></td>
+                    <td align="left" valign="top">Szabadsag_kartonok_{ÉÉÉÉ}.xlsx</td>
+                    <td align="left" valign="top" sdnum="1033;0;#,##0.00">pl. Szabadsag_kartonok_2021.xlsx<br>szabadság
+                        és
                         betegszabadság</td>
-                    <td align="left" valign=top>xls vagy xlsx</td>
+                    <td align="left" valign="top">xls vagy xlsx</td>
                 </tr>
                 <tr>
-                    <td valign=middle align="center" bgcolor="silver">&nbsp;8&nbsp;</td>
-                    <td align="left" valign=top><i>sablon munkafüzete</i></td>
-                    <td align="left" valign=top>munkaido-nyilvantartas.SABLON.xls </td>
-                    <td align="left" valign=top>az előállítandó fájl formázása</td>
-                    <td align="left" valign=top>xls</td>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;8&nbsp;</td>
+                    <td align="left" valign="top"><i>sablon munkafüzete</i></td>
+                    <td align="left" valign="top">munkaido-nyilvantartas.SABLON.xls </td>
+                    <td align="left" valign="top">az előállítandó fájl formázása</td>
+                    <td align="left" valign="top">xls</td>
                 </tr>
                 <tr>
-                    <td valign=middle align="center" bgcolor="silver">&nbsp;8&nbsp;</td>
-                    <td align="left" valign=top><i>eredmény munkafüzete</i></td>
-                    <td align="left" valign=top>munkaido-nyilvantartas.{ÉÉÉÉ}-{HH}.xls </td>
-                    <td align="left" valign=top>ezt állítja elő a program havi bontásban, pl.
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;8&nbsp;</td>
+                    <td align="left" valign="top"><i>eredmény munkafüzete</i></td>
+                    <td align="left" valign="top">munkaido-nyilvantartas.{ÉÉÉÉ}-{HH}.xls </td>
+                    <td align="left" valign="top">ezt állítja elő a program havi bontásban, pl.
                         munkaido-nyilvantartas.2021-01.xls </td>
-                    <td align="left" valign=top>xls</td>
+                    <td align="left" valign="top">xls</td>
                 </tr>
             </table>
 
@@ -203,7 +231,7 @@
 
         <p>A program bemenő adatfájlja (1/2). Ezt Neked kell összeállítanod a minta alapján.</p>
 
-        <p>Munkalapjai:
+        <p>Munkalapjai:</p>
 
         <blockquote>
 
@@ -222,35 +250,35 @@
                 <blockquote>
                     <table cellspacing="0" border="1">
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver"></td>
-                            <td valign=middle align="center" bgcolor="silver">A</td>
-                            <td valign=middle align="center" bgcolor="silver">B</td>
-                            <td valign=middle align="center" bgcolor="silver">C</td>
-                            <td valign=middle align="center" bgcolor="silver">D</td>
+                            <td valign="middle" align="center" bgcolor="silver"></td>
+                            <td valign="middle" align="center" bgcolor="silver">A</td>
+                            <td valign="middle" align="center" bgcolor="silver">B</td>
+                            <td valign="middle" align="center" bgcolor="silver">C</td>
+                            <td valign="middle" align="center" bgcolor="silver">D</td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
                             <td align="left"><b>dátum</b></td>
                             <td align="left"><b>nap típusa</b></td>
                             <td align="left"><b>megjegyzés</b></td>
                             <td align="left"><b>a hét napja</b></td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
                             <td align="right">2020-08-20</td>
                             <td align="left">munkaszüneti nap </td>
                             <td align="left">Szent István</td>
                             <td align="left">csütörtök</td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
                             <td align="right">2020-08-21</td>
                             <td align="left">áthelyezett pihenőnap</td>
                             <td align="left">2020-08-20 miatt</td>
                             <td align="left">péntek</td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;4&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;4&nbsp;</td>
                             <td align="right">2020-08-29</td>
                             <td align="left">áthelyezett munkanap </td>
                             <td align="left">2020-08-20 miatt</td>
@@ -268,22 +296,22 @@
                 <blockquote>
                     <table cellspacing="0" border="1">
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver"></td>
-                            <td valign=middle align="center" bgcolor="silver">A</td>
-                            <td valign=middle align="center" bgcolor="silver">B</td>
+                            <td valign="middle" align="center" bgcolor="silver"></td>
+                            <td valign="middle" align="center" bgcolor="silver">A</td>
+                            <td valign="middle" align="center" bgcolor="silver">B</td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
                             <td align="left"><b>hivatalos név</b></td>
                             <td align="left"><b>becenevek</b></td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
                             <td align="left">Zsebenczi Klopédia</td>
                             <td align="left"><i>Zsebi, Clopaedie dö Zsebentz</i></td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
                             <td align="left">Trisnyihák Tihamér</td>
                             <td align="left"><i>Trisi, Tihi</i></td>
                         </tr>
@@ -298,23 +326,23 @@
                 <blockquote>
                     <table cellspacing="0" border="1">
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver"></td>
-                            <td valign=middle align="center" bgcolor="silver">A</td>
-                            <td valign=middle align="center" bgcolor="silver">B</td>
-                            <td valign=middle align="center" bgcolor="silver">C</td>
-                            <td valign=middle align="center" bgcolor="silver">D</td>
-                            <td valign=middle align="center" bgcolor="silver">E</td>
-                            <td valign=middle align="center" bgcolor="silver">F</td>
-                            <td valign=middle align="center" bgcolor="silver">G</td>
-                            <td valign=middle align="center" bgcolor="silver">H</td>
-                            <td valign=middle align="center" bgcolor="silver">I</td>
-                            <td valign=middle align="center" bgcolor="silver">J</td>
-                            <td valign=middle align="center" bgcolor="silver">K</td>
-                            <td valign=middle align="center" bgcolor="silver">L</td>
-                            <td valign=middle align="center" bgcolor="silver">M</td>
+                            <td valign="middle" align="center" bgcolor="silver"></td>
+                            <td valign="middle" align="center" bgcolor="silver">A</td>
+                            <td valign="middle" align="center" bgcolor="silver">B</td>
+                            <td valign="middle" align="center" bgcolor="silver">C</td>
+                            <td valign="middle" align="center" bgcolor="silver">D</td>
+                            <td valign="middle" align="center" bgcolor="silver">E</td>
+                            <td valign="middle" align="center" bgcolor="silver">F</td>
+                            <td valign="middle" align="center" bgcolor="silver">G</td>
+                            <td valign="middle" align="center" bgcolor="silver">H</td>
+                            <td valign="middle" align="center" bgcolor="silver">I</td>
+                            <td valign="middle" align="center" bgcolor="silver">J</td>
+                            <td valign="middle" align="center" bgcolor="silver">K</td>
+                            <td valign="middle" align="center" bgcolor="silver">L</td>
+                            <td valign="middle" align="center" bgcolor="silver">M</td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
                             <td align="left"></td>
                             <td style="border-left: 1px solid #000000" align="left">kezd</td>
                             <td align="left">vége</td>
@@ -330,7 +358,7 @@
                             <td style="border-right: 1px solid #000000" align="left">érv. vége</td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;2&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;2&nbsp;</td>
                             <td align="left">Zsebi</td>
                             <td style="border-left: 1px solid #000000" align="right">X</td>
                             <td align="right">X+8:00</td>
@@ -346,7 +374,7 @@
                             <td style="border-right: 1px solid #000000" align="left"></td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
                             <td align="left">Trisi</td>
                             <td style="border-left: 1px solid #000000" align="right">9:00</td>
                             <td align="right">17:30</td>
@@ -377,9 +405,10 @@
                     lennie értéknek; ha nem dolgozott, akkor mindkettő üres.</p>
                 <p>Ha a munkaidő rugalmas, akkor a <b>kezd</b> oszlop értéke X, a <b>vége</b> pedig X+<i>ó:pp</i>, ahol
                     <i>ó:pp</i> a dolgozó napi munkaideje.
+                </p>
                 <p>Ha a <b>kezd</b> és <b>vége</b> közötti idő több, mint 8 óra, akkor a munkaidőből levonódik 30 perc
-                    ebédidő.
-                <p>
+                    ebédidő.</p>
+
                 <p>Az <b>érv. kezd</b> oszlopban áll, hogy melyik naptári napon kezdődik az időszak, amire ez a négyes
                     oszlopcsoport vonatkozik. Ez lehet üres, ez azt jelenti, hogy az idők kezdetétől érvényes. Célszerű
                     ehelyett a dolgozó munkába állásának napját beírni ide, hogy az első, esetleg töredékhónaphoz
@@ -398,7 +427,7 @@
                 <p>A példában Zsebi 2020.02.08 óta dolgozik a cégnél, 8 órás rugalmas munkaidőben; Trisi 2019.03.16-án
                     lépett be 6 órás munkaidővel, majd 2020.10.01 és 2020.12.31 között <a
                         id="fizetes_nelkuli_szabadsag"><i>fizetés nélküli szabadságon</i></a> volt, utána visszatért 8
-                    órásként.
+                    órásként.</p>
 
             </blockquote>
 
@@ -410,29 +439,29 @@
                 <blockquote>
                     <table cellspacing="0" border="1">
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver"></td>
-                            <td valign=middle align="center" bgcolor="silver">A</td>
-                            <td valign=middle align="center" bgcolor="silver">B</td>
-                            <td valign=middle align="center" bgcolor="silver">C</td>
-                            <td valign=middle align="center" bgcolor="silver">D</td>
-                            <td valign=middle align="center" bgcolor="silver">E</td>
-                            <td valign=middle align="center" bgcolor="silver">F</td>
-                            <td valign=middle align="center" bgcolor="silver">G</td>
+                            <td valign="middle" align="center" bgcolor="silver"></td>
+                            <td valign="middle" align="center" bgcolor="silver">A</td>
+                            <td valign="middle" align="center" bgcolor="silver">B</td>
+                            <td valign="middle" align="center" bgcolor="silver">C</td>
+                            <td valign="middle" align="center" bgcolor="silver">D</td>
+                            <td valign="middle" align="center" bgcolor="silver">E</td>
+                            <td valign="middle" align="center" bgcolor="silver">F</td>
+                            <td valign="middle" align="center" bgcolor="silver">G</td>
 
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
                             <td style="border-top: 1px solid #000000; border-left: 1px solid #000000" align="left"></td>
                             <td style="border-top: 1px solid #000000" align="left"></td>
                             <td style="border-top: 1px solid #000000; border-right: 1px solid #000000" align="left">
                             </td>
                             <td style="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000"
-                                colspan=2 align="center" valign=middle>Clopaedie dö Zsebentz</td>
+                                colspan="2" align="center" valign="middle">Clopaedie dö Zsebentz</td>
                             <td style="border-top: 1px solid #000000; border-left: 1px solid #000000; border-right: 1px solid #000000"
-                                colspan=2 align="center" valign=middle>Tihi</td>
+                                colspan="2" align="center" valign="middle">Tihi</td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;2&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;2&nbsp;</td>
                             <td style="border-left: 1px solid #000000" align="left">dátum</td>
                             <td align="left">a hét napja</td>
                             <td style="border-right: 1px solid #000000" align="left">össz óra</td>
@@ -442,7 +471,7 @@
                             <td style="border-right: 1px solid #000000" align="left">vége</td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
                             <td style="border-top: 1px solid #000000" align="right">2021-01-02</td>
                             <td style="border-top: 1px solid #000000" align="left">szombat</td>
                             <td style="border-top: 1px solid #000000" align="right">15</td>
@@ -455,7 +484,7 @@
                                 13:00</td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;4&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;4&nbsp;</td>
                             <td style="border-left: 1px solid #000000" align="right">2021-01-09</td>
                             <td align="left">szombat</td>
                             <td style="border-right: 1px solid #000000" align="right">20</td>
@@ -465,7 +494,7 @@
                             <td style="border-right: 1px solid #000000" align="right">13:00</td>
                         </tr>
                         <tr>
-                            <td valign=middle align="center" bgcolor="silver">&nbsp;5&nbsp;</td>
+                            <td valign="middle" align="center" bgcolor="silver">&nbsp;5&nbsp;</td>
                             <td style="border-left: 1px solid #000000" align="right">2021-01-16</td>
                             <td align="left">szombat</td>
                             <td style="border-right: 1px solid #000000" align="right">10</td>
@@ -487,7 +516,7 @@
                         style="background-color: silver">&nbsp;G&nbsp;</span>, stb.), egy kettes oszlopcsoport egy
                     dolgozóé. Csak azokat a dolgozókat kell ebbe a munkafüzetbe felvenni, akik dolgoznak szombaton.</p>
                 <p>Ha egy dolgozó egy adott szombaton dolgozott, akkor a <b>kezd</b> és <b>vége</b> oszlopot is ki kell
-                    tölteni <i>óra:perc</i> formátumban, egyébként mindkettőt üresen kell hagyni.
+                    tölteni <i>óra:perc</i> formátumban, egyébként mindkettőt üresen kell hagyni.</p>
                 <p>Ha új dolgozót, azaz új kettes oszlopcsoport veszel fel, ügyelj arra, hogy az <span
                         style="background-color: silver">&nbsp;1&nbsp;</span> sorban vagy vond össze a két cellát, mint
                     a példában, vagy a kettő közül a bal oldaliba írd a dolgozó nevét.</p>
@@ -497,162 +526,164 @@
 
         </blockquote>
 
-        <h3><tt>Szabadsag_kartonok_{ÉÉÉÉ}.xlsx</tt></h3>
+    </blockquote>
 
+    <h3><tt>Szabadsag_kartonok_{ÉÉÉÉ}.xlsx</tt></h3>
+
+    <blockquote>
+
+        <p>A program bemenő fájlja (2/2), pl. Szabadsag_kartonok_2021.xlsx. Ezt Neked kell összeállítanod a minta
+            alapján.</p>
+        <p>A szabadság-nyilvántartó kartonokat tartalmazza, minden dolgozóét egy külön munkalapon.</p>
+        <p>A fizetett szabadságokat és a betegszabadságot (táppénzt) is könyveli.</p>
+        <p>A munkalap neve a dolgozó hivatalos neve vagy egy névváltozata, ill. beceneve legyen.</p>
+
+
+        <p><i>Példa:</i></p>
         <blockquote>
-
-            <p>A program bemenő fájlja (2/2), pl. Szabadsag_kartonok_2021.xlsx. Ezt Neked kell összeállítanod a minta
-                alapján.</p>
-            <p>A szabadság-nyilvántartó kartonokat tartalmazza, minden dolgozóét egy külön munkalapon.</p>
-            <p>A fizetett szabadságokat és a betegszabadságot (táppénzt) is könyveli.</p>
-            <p>A munkalap neve a dolgozó hivatalos neve vagy egy névváltozata, ill. beceneve legyen.</p>
-            </p>
-
-            <p><i>Példa:</i></p>
-            <blockquote>
-                <table cellspacing="0" border="1">
-                    <tr>
-                        <td valign=middle align="center" bgcolor="silver"></td>
-                        <td valign=middle align="center" bgcolor="silver">A</td>
-                        <td valign=middle align="center" bgcolor="silver">B</td>
-                        <td valign=middle align="center" bgcolor="silver">C</td>
-                        <td valign=middle align="center" bgcolor="silver">D</td>
-                        <td valign=middle align="center" bgcolor="silver">E</td>
-                        <td valign=middle align="center" bgcolor="silver">F</td>
-                        <td valign=middle align="center" bgcolor="silver">G</td>
-                    </tr>
-                    <tr>
-                        <td valign=middle align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
-                        <td align="left"><b>
-                                <font color="#FF0000">Zsebi</font>
-                            </b></td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                    </tr>
-                    <tr>
-                        <td valign=middle align="center" bgcolor="silver">&nbsp;2&nbsp;</td>
-                        <td align="left"><b>
-                                <font color="#000000">Dátum</font>
-                            </b></td>
-                        <td align="left"><b>
-                                <font color="#000000"><br></font>
-                            </b></td>
-                        <td align="left"><b>
-                                <font color="#000000">Ki/Nap</font>
-                            </b></td>
-                        <td align="left"><b>
-                                <font color="#000000">Marad</font>
-                            </b></td>
-                        <td align="left"><b>Típus</b></td>
-                        <td align="left"><b>Kezdő nap</b></td>
-                        <td align="left"><b>Végnap</b></td>
-                    </tr>
-                    <tr>
-                        <td valign=middle align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
-                        <td align="left"><b>
-                                <font color="#558ED5">Nyitó</font>
-                            </b></td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="right"><b>
-                                <font color="#558ED5">31</font>
-                            </b><a class="comment-indicator"></a>
-                            <comment>Előző évről 1</comment>
-                        </td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                    </tr>
-                    <tr>
-                        <td valign=middle align="center" bgcolor="silver">&nbsp;4&nbsp;</td>
-                        <td align="right">2021.01.04</td>
-                        <td align="right">2021.01.05</td>
-                        <td align="right">2</td>
-                        <td align="right">29</td>
-                        <td align="left"><br></td>
-                        <td align="left">hétfő</td>
-                        <td align="left">kedd</td>
-                    </tr>
-                    <tr>
-                        <td valign=middle align="center" bgcolor="silver">&nbsp;5&nbsp;</td>
-                        <td align="right">2021.02.15</td>
-                        <td align="right">2021.02.18</td>
-                        <td align="right">4</td>
-                        <td align="right">25</td>
-                        <td align="left">beteg</td>
-                        <td align="left">hétfő</td>
-                        <td align="left">csütörtök</td>
-                    </tr>
-                    <tr>
-                        <td valign=middle align="center" bgcolor="silver">&nbsp;6&nbsp;</td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="right">25</td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                    </tr>
-                    <tr>
-                        <td valign=middle align="center" bgcolor="silver">&nbsp;7&nbsp;</td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="right">25</td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                        <td align="left"><br></td>
-                    </tr>
-                </table>
-            </blockquote>
-            <p>Az <span style="background-color: silver">&nbsp;A1&nbsp;</span> cellában is a dolgozó hivatalos neve vagy
-                egy névváltozata, ill. beceneve áll.</p>
-            </p>
-            <p>A <span style="background-color: silver">&nbsp;2&nbsp;</span> sort a program nem használja, de legyen
-                ott.</p>
-            </p>
-            <p>A <span style="background-color: silver">&nbsp;3&nbsp;</span> sorban csak a <span
-                    style="background-color: silver">&nbsp;D3&nbsp;</span> cella fontos, itt áll, hogy a dolgozónak az
-                év elején hány nap szabadsága volt még.</p>
-            </p>
-            <p>A <span style="background-color: silver">&nbsp;4&nbsp;</span> sortól kezdve csak az <span
-                    style="background-color: silver">&nbsp;A&nbsp;</span>, <span
-                    style="background-color: silver">&nbsp;B&nbsp;</span> és <span
-                    style="background-color: silver">&nbsp;E&nbsp;</span> oszlopok fontosak, a többi csak neked könnyíti
-                meg az ellenőrzést.</p>
-            <p>A (beteg)szabadság kezdő- és végdátuma is legyen kitöltve.</p>
-            <p>A <b>Ki/Nap</b> és <b>Marad</b> oszlopokat a program NEM használja, hanem kiszámolja a dátumokból a <a
-                    href="#munkanaptar">munkanaptár</a> segítségével.</p>
-            <p>A <b>Típus</b> oszlop viszont fontos: Ha ez üres, akkor fizetett szabadság, ha <b><i>bármi</i></b> ide
-                van írva, akkor betegszabadság (táppénz).</p>
-            <p>A <a href="#fizetes_nelkuli_szabadsag">fizetés nélküli szabadságot</a> a hétköznapi munkarendnél lehet
-                felvenni.</p>
-
-
+            <table cellspacing="0" border="1">
+                <tr>
+                    <td valign="middle" align="center" bgcolor="silver"></td>
+                    <td valign="middle" align="center" bgcolor="silver">A</td>
+                    <td valign="middle" align="center" bgcolor="silver">B</td>
+                    <td valign="middle" align="center" bgcolor="silver">C</td>
+                    <td valign="middle" align="center" bgcolor="silver">D</td>
+                    <td valign="middle" align="center" bgcolor="silver">E</td>
+                    <td valign="middle" align="center" bgcolor="silver">F</td>
+                    <td valign="middle" align="center" bgcolor="silver">G</td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;1&nbsp;</td>
+                    <td align="left"><b>
+                            <font color="#FF0000">Zsebi</font>
+                        </b></td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;2&nbsp;</td>
+                    <td align="left"><b>
+                            <font color="#000000">Dátum</font>
+                        </b></td>
+                    <td align="left"><b>
+                            <font color="#000000"><br></font>
+                        </b></td>
+                    <td align="left"><b>
+                            <font color="#000000">Ki/Nap</font>
+                        </b></td>
+                    <td align="left"><b>
+                            <font color="#000000">Marad</font>
+                        </b></td>
+                    <td align="left"><b>Típus</b></td>
+                    <td align="left"><b>Kezdő nap</b></td>
+                    <td align="left"><b>Végnap</b></td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;3&nbsp;</td>
+                    <td align="left"><b>
+                            <font color="#558ED5">Nyitó</font>
+                        </b></td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="right"><b>
+                            <font color="#558ED5">31</font>
+                        </b><a class="comment-indicator"></a>
+                        <comment>Előző évről 1</comment>
+                    </td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;4&nbsp;</td>
+                    <td align="right">2021.01.04</td>
+                    <td align="right">2021.01.05</td>
+                    <td align="right">2</td>
+                    <td align="right">29</td>
+                    <td align="left"><br></td>
+                    <td align="left">hétfő</td>
+                    <td align="left">kedd</td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;5&nbsp;</td>
+                    <td align="right">2021.02.15</td>
+                    <td align="right">2021.02.18</td>
+                    <td align="right">4</td>
+                    <td align="right">25</td>
+                    <td align="left">beteg</td>
+                    <td align="left">hétfő</td>
+                    <td align="left">csütörtök</td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;6&nbsp;</td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="right">25</td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                </tr>
+                <tr>
+                    <td valign="middle" align="center" bgcolor="silver">&nbsp;7&nbsp;</td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="right">25</td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                    <td align="left"><br></td>
+                </tr>
+            </table>
         </blockquote>
+        <p>Az <span style="background-color: silver">&nbsp;A1&nbsp;</span> cellában is a dolgozó hivatalos neve vagy
+            egy névváltozata, ill. beceneve áll.</p>
 
-        <h3><tt>munkaido-nyilvantartas.html</tt></h3>
+        <p>A <span style="background-color: silver">&nbsp;2&nbsp;</span> sort a program nem használja, de legyen
+            ott.</p>
 
-        <blockquote>
+        <p>A <span style="background-color: silver">&nbsp;3&nbsp;</span> sorban csak a <span
+                style="background-color: silver">&nbsp;D3&nbsp;</span> cella fontos, itt áll, hogy a dolgozónak az
+            év elején hány nap szabadsága volt még.</p>
+
+        <p>A <span style="background-color: silver">&nbsp;4&nbsp;</span> sortól kezdve csak az <span
+                style="background-color: silver">&nbsp;A&nbsp;</span>, <span
+                style="background-color: silver">&nbsp;B&nbsp;</span> és <span
+                style="background-color: silver">&nbsp;E&nbsp;</span> oszlopok fontosak, a többi csak neked könnyíti
+            meg az ellenőrzést.</p>
+        <p>A (beteg)szabadság kezdő- és végdátuma is legyen kitöltve.</p>
+        <p>A <b>Ki/Nap</b> és <b>Marad</b> oszlopokat a program NEM használja, hanem kiszámolja a dátumokból a <a
+                href="#munkanaptar">munkanaptár</a> segítségével.</p>
+        <p>A <b>Típus</b> oszlop viszont fontos: Ha ez üres, akkor fizetett szabadság, ha <b><i>bármi</i></b> ide
+            van írva, akkor betegszabadság (táppénz).</p>
+        <p>A <a href="#fizetes_nelkuli_szabadsag">fizetés nélküli szabadságot</a> a hétköznapi munkarendnél lehet
+            felvenni.</p>
 
 
-            <p>Ez a leírás</p>
+    </blockquote>
 
-        </blockquote>
+    <h3><tt>munkaido-nyilvantartas.html</tt></h3>
 
-        <h3><tt>munkaido-nyilvantartas.{ÉÉÉÉ}-{HH}.xls</tt></h3>
+    <blockquote>
 
-        <blockquote>
 
-            <p>A program egyhavi kimenőfájlja, pl. munkaido-nyilvantartas.2021-01.xls</p>
+        <p>Ez a leírás</p>
 
-            <p>A program csak ezt a fájlt írja. Ha már létezik, vagy nem tudja írni, hibaüzenettel leáll.
+    </blockquote>
 
-        </blockquote>
+    <h3><tt>munkaido-nyilvantartas.{ÉÉÉÉ}-{HH}.xls</tt></h3>
+
+    <blockquote>
+
+        <p>A program egyhavi kimenőfájlja, pl. munkaido-nyilvantartas.2021-01.xls</p>
+
+        <p>A program csak ezt a fájlt írja. Ha már létezik, vagy nem tudja írni, hibaüzenettel leáll.</p>
+
+    </blockquote>
 
 </body>
 
