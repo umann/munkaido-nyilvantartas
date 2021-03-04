@@ -79,7 +79,7 @@
         h i j k l m n o p q r s t u v w x y z <i>(ékezet nélküli [latin] kis- és nagybetűk)</i>
     </p>
 
-    <p>Ne használj az <a href="#munkafuzet-formatumok">ebben a leírásban szereplőektől</a> eltérő munkafüzet/formátumot.
+    <p>Csak Excel 97-2003 (xls) munkafüzet-formátumot használj, Excel 2007-365 (xlsx) formátumot ne.
     </p>
 
     <p>Ügyelj arra, hogy az Excel fájlokban ne szúrj be az elejére új oszlopot vagy sort, és máshol is csak az alább
@@ -111,7 +111,7 @@
 
     </blockquote>
 
-    <h3><tt>munkaido-nyilvantartas.KONFIG.xlsx</tt></h3>
+    <h3><tt>munkaido-nyilvantartas.KONFIG.xls</tt></h3>
 
     <blockquote>
 
@@ -157,44 +157,44 @@
                     <td align="left" valign="top"><i>munkanaptár munkalapja</i></td>
                     <td align="left" valign="top">munkaido-nyilvantartas.ADATOK.xls[munkanaptár]</td>
                     <td align="left" valign="top">hivatalos munkaszüneti napok, áthelyezett munka- és pihenőnapok</td>
-                    <td align="left" valign="top">xls vagy xlsx</td>
+                    <td align="left" valign="top"></td>
                 </tr>
                 <tr>
                     <td valign="middle" align="center" bgcolor="silver">&nbsp;4&nbsp;</td>
                     <td align="left" valign="top"><i>dolgozók munkalapja</i></td>
                     <td align="left" valign="top">munkaido-nyilvantartas.ADATOK.xls[dolgozók]</td>
                     <td align="left" valign="top">Minden dolgozó neve és összes névváltozatai és becenevei</td>
-                    <td align="left" valign="top">xls vagy xlsx</td>
+                    <td align="left" valign="top"></td>
                 </tr>
                 <tr>
                     <td valign="middle" align="center" bgcolor="silver">&nbsp;5&nbsp;</td>
                     <td align="left" valign="top"><i>hétköznapi munkaidő munkalapja</i></td>
                     <td align="left" valign="top">munkaido-nyilvantartas.ADATOK.xls[hétköznap] </td>
                     <td align="left" valign="top">Minden dolgozó általános hétköznapi munkarendje</td>
-                    <td align="left" valign="top">xls vagy xlsx</td>
+                    <td align="left" valign="top"></td>
                 </tr>
                 <tr>
                     <td valign="middle" align="center" bgcolor="silver">&nbsp;6&nbsp;</td>
                     <td align="left" valign="top"><i>szombati munkaidő munkalapja</i></td>
                     <td align="left" valign="top">munkaido-nyilvantartas.ADATOK.xls[szombat]</td>
                     <td align="left" valign="top">Minden dolgozó minden egyes szombati ledolgozott munkaideje</td>
-                    <td align="left" valign="top">xls vagy xlsx</td>
+                    <td align="left" valign="top"></td>
                 </tr>
                 <tr>
                     <td valign="middle" align="center" bgcolor="silver">&nbsp;7&nbsp;</td>
                     <td align="left" valign="top"><i>szabadság-nyilvántartó kartonok munkafüzete</i></td>
-                    <td align="left" valign="top">Szabadsag_kartonok_{ÉÉÉÉ}.xlsx</td>
-                    <td align="left" valign="top" sdnum="1033;0;#,##0.00">pl. Szabadsag_kartonok_2021.xlsx<br>szabadság
+                    <td align="left" valign="top">Szabadsag_kartonok_{ÉÉÉÉ}.xls</td>
+                    <td align="left" valign="top" sdnum="1033;0;#,##0.00">pl. Szabadsag_kartonok_2021.xls<br>szabadság
                         és
                         betegszabadság</td>
-                    <td align="left" valign="top">xls vagy xlsx</td>
+                    <td align="left" valign="top"></td>
                 </tr>
                 <tr>
                     <td valign="middle" align="center" bgcolor="silver">&nbsp;8&nbsp;</td>
                     <td align="left" valign="top"><i>sablon munkafüzete</i></td>
                     <td align="left" valign="top">munkaido-nyilvantartas.SABLON.xls </td>
                     <td align="left" valign="top">az előállítandó fájl formázása</td>
-                    <td align="left" valign="top">xls</td>
+                    <td align="left" valign="top"></td>
                 </tr>
                 <tr>
                     <td valign="middle" align="center" bgcolor="silver">&nbsp;8&nbsp;</td>
@@ -202,7 +202,7 @@
                     <td align="left" valign="top">munkaido-nyilvantartas.{ÉÉÉÉ}-{HH}.xls </td>
                     <td align="left" valign="top">ezt állítja elő a program havi bontásban, pl.
                         munkaido-nyilvantartas.2021-01.xls </td>
-                    <td align="left" valign="top">xls</td>
+                    <td align="left" valign="top"></td>
                 </tr>
             </table>
 
@@ -528,11 +528,11 @@
 
     </blockquote>
 
-    <h3><tt>Szabadsag_kartonok_{ÉÉÉÉ}.xlsx</tt></h3>
+    <h3><tt>Szabadsag_kartonok_{ÉÉÉÉ}.xls</tt></h3>
 
     <blockquote>
 
-        <p>A program bemenő fájlja (2/2), pl. Szabadsag_kartonok_2021.xlsx. Ezt Neked kell összeállítanod a minta
+        <p>A program bemenő fájlja (2/2), pl. Szabadsag_kartonok_2021.xls. Ezt Neked kell összeállítanod a minta
             alapján.</p>
         <p>A szabadság-nyilvántartó kartonokat tartalmazza, minden dolgozóét egy külön munkalapon.</p>
         <p>A fizetett szabadságokat és a betegszabadságot (táppénzt) is könyveli.</p>
@@ -684,6 +684,14 @@
         <p>A program csak ezt a fájlt írja. Ha már létezik, vagy nem tudja írni, hibaüzenettel leáll.</p>
 
     </blockquote>
+    
+    <h2>A program használata</h2>
+
+    <p>Ha a fenti fájlok mind be vannak állítva, indítsd el az EXE-t. Ez bekéri a hónapot, amelyikre a munkaidő-nyilvántartást el akarod készíteni.
+    
+    <table><tr><td bgcolor="black" style="color:white"><pre>Hónap (2021.01):&nbsp;&nbsp;&nbsp;</pre></td></tr></table>
+    
+    <p>A zárójelben levő hónap az alapértelmezett; ez, ha a hónap utolsó 3 napjának valamelyikén futtatod, az aktuális hónap, ha előbb, akkor az előző hónap. Ha Entert nyomsz, ez lesz érvényes. Egyébként írd be a hónapot <i>ÉÉÉÉ.HH</i> formátumban, és üss Entert.</p>
 
 </body>
 

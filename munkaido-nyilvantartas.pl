@@ -8,7 +8,7 @@
 use strict;
 use warnings;
 
-our $VERSION = '0.0.25';
+our $VERSION = '0.0.40';
 
 use 5.010;
 
@@ -29,9 +29,7 @@ use Spreadsheet::ParseExcel::SaveParser;
 use Spreadsheet::WriteExcel;
 use Spreadsheet::ParseExcel::Utility qw(int2col);
 use Time::Local qw(timelocal);
-use YAML qw(LoadFile Dump);
-
-use lib $RealBin;  # for mocked Crypt/Mode/CBC.pm
+use YAML qw(Dump);
 
 sub terminate;
 sub stderr;
@@ -43,7 +41,7 @@ binmode STDERR, ':encoding(UTF-8)';
 binmode STDOUT, ':encoding(UTF-8)';
 system 'chcp 65001 >nul';
 
-my $D = q{.};      # date delimiter
+my $D = q{.};  # date delimiter
 {
     no warnings 'redefine'; ## no critic(ProhibitNoWarnings)
 
@@ -72,7 +70,7 @@ my %config_default = (
     employee_filesheet  => 'munkaido-nyilvantartas.ADATOK.xls[dolgozók]',
     workday_filesheet   => 'munkaido-nyilvantartas.ADATOK.xls[hétköznap]',
     saturday_filesheet  => 'munkaido-nyilvantartas.ADATOK.xls[szombat]',
-    leave_register_file => 'Szabadsag_kartonok_{ÉÉÉÉ}.xlsx',
+    leave_register_file => 'Szabadsag_kartonok_{ÉÉÉÉ}.xls',
     template_file       => 'munkaido-nyilvantartas.SABLON.xls',
     output_file         => 'munkaido-nyilvantartas.{ÉÉÉÉ}-{HH}.xls ',
 );
@@ -86,7 +84,7 @@ GetOptions(
 version() if $opt{version};
 build()   if $opt{build};
 
-my $NAME         = qr/\w+(?:\h\w+)*/msx;
+my $NAME         = qr/\S+(?:\x20\S+)*/msx;
 my $ANY_DATE_RE0 = qr/\d+\D\d+\D\d+/msx;
 my $YM_RE        = qr/(\d{4}\D\d{2})/msx;
 
@@ -128,6 +126,9 @@ my $_MONTH                 = 'hónap';
 my $_EXT                   = 'fájlkiterjesztés';
 my $_EMPLOYEE_NAME         = 'dolgozónév';
 my $_INVALID               = 'érvénytelen';
+my $_NO_SUCH               = 'nincs ilyen';
+my $_WORKSHEET             = 'munkalap';
+my $_ENV_VAR               = 'környezeti változó';
 my $_ALREADY_EXISTS        = 'már létezik';
 my $_NO                    = 'nincs';
 my $_MISSING               = 'hiányzik';
@@ -155,22 +156,20 @@ my $_ERROR                 = 'hiba';
 my $_OFFICIAL_WORK_HOURS   = 'hivatalos munkaórák';
 my $_MANDATORY_CONFIG_KEYS = 'kötelező konfig paraméterek';
 my $_ENTERED_CONFIG_KEYS   = 'megadott konfig paraméterek';
-
-#my $_OFFICIAL_WORK_DAYS   = 'hivatalos munkanapok';
-my $_WORKED_DAYS          = 'hivatalos / ledolgozott munkanapok';
-my $_WORKED_HOURS         = 'ledolgozott órák';
-my $_OVER_HOURS           = 'túlóra';
-my $_VACATION_DAYS        = 'szabadság napok';
-my $_SICKLEAVE_DAYS       = 'betegség napok';
-my $_PAID_VACATION_HOURS  = 'szabadság után fizetett órák';
-my $_PAID_SICKLEAVE_HOURS = 'betegség után fizetett órák';
-my $_VACATION_DAYS_LEFT   = 'megmaradt szabadság napok';
-my $_DAYS_AT_START        = 'nyitó szabadság napok';
-my $_NICKNAMES            = 'becenevek';
-my $_YYYY                 = 'ÉÉÉÉ';
-my $_MM                   = 'HH';
-my $_TOTAL                = 'Összesen';
-my $_SYS                  = 'RENDSZER';
+my $_WORKED_DAYS           = 'hivatalos / ledolgozott munkanapok';
+my $_WORKED_HOURS          = 'ledolgozott órák';
+my $_OVER_HOURS            = 'túlóra';
+my $_VACATION_DAYS         = 'szabadság napok';
+my $_SICKLEAVE_DAYS        = 'betegség napok';
+my $_PAID_VACATION_HOURS   = 'szabadság után fizetett órák';
+my $_PAID_SICKLEAVE_HOURS  = 'betegség után fizetett órák';
+my $_VACATION_DAYS_LEFT    = 'megmaradt szabadság napok';
+my $_DAYS_AT_START         = 'nyitó szabadság napok';
+my $_NICKNAMES             = 'becenevek';
+my $_YYYY                  = 'ÉÉÉÉ';
+my $_MM                    = 'HH';
+my $_TOTAL                 = 'Összesen';
+my $_SYS                   = 'RENDSZER';
 
 my $_USR_ERR_BOTH_OFFFICAL_AND_NICKNAME = 'egyszerre hivatalos és becenév';
 my $_USR_ERR_SAT_HOLIDAY_SAT_WORK = 'szombati ünnepnap munkabejegyzéssel';
@@ -194,11 +193,8 @@ my $_SYS_USR_ERR_SUN_MOVED_WORKDAY_HOLIDAY =
     "$_SYS: vasárnapra áthelyezett munkanap (+szabadság)";
 my $_SYS_USR_ERR_WEEKDAY_MOVED_WORKDAY_HOLIDAY =
     "$_SYS: hétköznapra áthelyezett munkanap (+szabadság)";
-my $_ERR_NO_SUCH_WORKSHEET = 'nincs ilyen munkafüzet';
-my $_ERR_NO_SUCH_ENV_VAR   = 'Nincs ilyen környezeti változó';
-my $_ERR_NOT_INSTALLED     = 'nincs telepítve';
-my $_ERR_CANNOT_READ       = 'nem lehet olvasni';
-my $_ERR_CANNOT_WRITE      = 'nem lehet írni';
+my $_ERR_CANNOT_WRITE = 'nem lehet írni';
+my $_ERR_CANNOT_READ  = 'nem lehet olvasni';
 
 my @_TO_BE_SUMMED = (
     $_WORKED_HOURS, $_PAID_SICKLEAVE_HOURS, $_PAID_VACATION_HOURS,
@@ -355,8 +351,7 @@ sub subst_tmpl {
     my $x = shift;
     $x =~ s/[{](?:$_YYYY|YYYY)[}]/$target_yyyy/gmsx;
     $x =~ s/[{](?:$_MM|MM)[}]/$target_mm/gmsx;
-    $x =~
-        s{[%](\w+)[%]}{$ENV{$1} // terminate("$_ERR_NO_SUCH_ENV_VAR: $1")}egmsx;
+    $x =~ s{[%](\w+)[%]}{$ENV{$1} // terminate("$_NO_SUCH $_ENV_VAR: $1")}egmsx;
     return $x;
 }
 
@@ -418,7 +413,7 @@ sub ymd_employee_work_data_1 {
             $_PAID_SICKLEAVE_HOURS, $_OVER_HOURS
         )
     } = @{ $subcase_hr->{$subcase} // terminate("$_SYS: $subcase") };
-    terminate(dump $return{$_ERROR},
+    terminate(Dump $return{$_ERROR},
         $ymd, $employee_name, $vacation_hoh->{$employee_name})
         if delete $return{$_ERROR};
 
@@ -450,8 +445,15 @@ sub get_subcase_hr {
     # 0.. nem szabadság
     # S.. szabadság
     # B.. betegszabadság
-
-# Aleset => hiba, hivatalos munkaóra szorzó, ledolgozott munkaóra szorzó, kifizetett szabadság munkaóra szorzó, , kifizetett betegszabadság munkaóra szorzó, túlóra szorzó
+    #
+    # Aleset => [
+    #    hiba,
+    #    hivatalos munkaóra szorzó,
+    #    ledolgozott munkaóra szorzó,
+    #    kifizetett szabadság munkaóra szorzó,
+    #    kifizetett betegszabadság munkaóra szorzó,
+    #    túlóra szorzó
+    # ]
     return {
         '0000' => [ 0, 0, 0, 0, 0, 0 ],  # normál vasárnap
         '0001' => [ 0, 1, 1, 0, 0, 0 ],  # normál hétfőtől péntekig
@@ -526,7 +528,7 @@ sub get_fullpath {
 sub get_config {
     my $config_file = $opt{config_file} // do {
         (my $base = $0) =~ s/.(?:pl|exe)$//msx || terminate($0);
-        "$base.KONFIG.xlsx";
+        "$base.KONFIG.xls";
     };  # do
     my %return;
     if (-f $config_file) {
@@ -609,14 +611,14 @@ sub get_vacation_hoh {
         my $sheethoh = $workbookhoh->{$sheet_name};
 
 ## no critic(ProhibitComplexRegexes)
-        terminate("$filesheet syntax\n" . sheethoh_to_txt($sheethoh))
-            if sheethoh_to_txt($sheethoh) !~ m{\A
+        my $txt = sheethoh_to_txt($sheethoh);
+        terminate("$filesheet syntax\n" . $txt) if $txt !~ m{\A
             $NAME\n
             [^\n]*\n
             (?:[^\n\t]*\t){3}\d+\n
             (?:$ANY_DATE_RE0\t$ANY_DATE_RE0\t[^\n]*\n)*
-            (?:\t\t\t\d+\n)*
-        \Z}msx;
+            (?:\t\t\t\d+(?:\t[^\n]*)?\n)*
+         \Z}msx;
 
 ## use critic(ProhibitComplexRegexes)
 
@@ -929,7 +931,8 @@ ROW: for my $row (sort { $a <=> $b } keys %{$sheethoh}) {
             if ($colname !~ /\S/msx) {
                 next COL if $val !~ /\S/msx;  # value is empty, too, ok
                 terminate(
-"$debug!$cellname: value is non-empty (`$val`), column name should not be empty (`$colname`)"
+                    "$debug!$cellname: value is non-empty (`$val`),",
+                    "column name should not be empty (`$colname`)"
                 );
             }
             if ($colname_occurences{$colname} > 1) {
@@ -958,8 +961,7 @@ sub file_sheet_names_to_sheethohs {
     my ($file, @sheet_names) = @_;
     my $workbookhoh = file_to_workbookhoh($file);
     my @return      = map {
-        $workbookhoh->{$_}
-            // terminate("$_ERR_NO_SUCH_WORKSHEET: $file" . "[$_]")
+        $workbookhoh->{$_} // terminate("$_NO_SUCH $_WORKSHEET: $file" . "[$_]")
     } @sheet_names;
     return 1 == @return ? $return[0] : @return;
 }
@@ -973,29 +975,18 @@ sub filesheet_to_hoh {
 sub filesheet_to_sheethoh {
     my $filesheet = shift;
     my ($file, $sheet_name) = $filesheet =~ /^(.+)\[(.*)\]$/msx
-        or terminate("Hibás munkalap-hivatkozás: `$filesheet`");
+        or terminate("$_INVALID $_WORKSHEET: `$filesheet`");
     my $workbookhoh = file_to_workbookhoh($file);
     return $workbookhoh->{$sheet_name}
-        // terminate("$_ERR_NO_SUCH_WORKSHEET: $file" . "[$sheet_name]");
+        // terminate("$_NO_SUCH $_WORKSHEET: $file" . "[$sheet_name]");
 }
 
 sub file_to_workbook {
     my $file = shift // terminate();
-    (my $ext) = $file =~ /[.](\w+)$/msx;
+
+    $file =~ /[.]xls$/imsx or terminate("$_INVALID $_EXT: $file");
     return eval {
-        my $class = {
-            xls  => 'Spreadsheet::ParseExcel',
-            xlsx => 'Spreadsheet::ParseXLSX',
-            ods  => 'Spreadsheet::ParseCSV',
-        }->{$ext} // die "$_INVALID $_EXT `$ext`\n";
-
-## no critic(ProhibitStringyEval)
-
-        eval "require $class" // die "$class $_ERR_NOT_INSTALLED; $@\n";
-
-## use critic(ProhibitStringyEval)
-
-        my $parser = $class->new();
+        my $parser = Spreadsheet::ParseExcel->new();
         $parser->parse($file) // die $parser->error() . "\n";
     } // terminate("$_ERR_CANNOT_READ: $file\n$@");
 }
@@ -1221,7 +1212,12 @@ sub terminate {
     $longmess =~ s/(?:ARRAY|HASH)[(]0x[0-9a-f]+[)]/.../gmsx;
     $longmess =~ s/^\h+//gmsx;
     stderr(
-        Dump { stacktrace => $longmess, options => \%opt, config => \%config });
+        dump {
+            stacktrace => [ split /\n/msx, $longmess ],
+            options    => \%opt,
+            config     => \%config
+        }
+    );
     stderr("\n*** HIBA: ", @msg, "\n\nNyomj ENTER-t\n");
     my $dummy = <>;
     exit -1;
@@ -1316,7 +1312,7 @@ sub build {
     my $s = $ENV{SystemRoot};
     (local $ENV{PATH} = "$s/system32;$p/bin;$p/perl/site/bin;$p/perl/bin") =~
         tr{/}{\\};
-    _qx("spp -M Spreadsheet::ParseXLSX -o $exe $tmp");
+    _qx("spp -o $exe $tmp");
 
     stdout(_qx("$exe --version"));
 
