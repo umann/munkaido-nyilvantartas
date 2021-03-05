@@ -8,26 +8,25 @@
 use strict;
 use warnings;
 
-our $VERSION = '0.0.40';
+our $VERSION = '0.0.52';
 
 use 5.010;
 
 use utf8;
 
 use Carp qw(cluck confess croak longmess);
-use Cwd qw(abs_path);
 use Data::Dump qw(dump);
 use Digest::MD5 qw(md5_hex);
-use File::Basename qw(dirname);
+use File::Basename qw(basename dirname);
 use File::Temp qw(tempfile);
 use File::Slurp qw(read_file write_file);
-use File::Spec::Functions qw(catfile rel2abs);
-use FindBin qw($RealBin);
+use File::Spec::Functions qw(catfile);
+use FindBin qw($Bin);
 use Getopt::Long;
 use Spreadsheet::ParseExcel;
 use Spreadsheet::ParseExcel::SaveParser;
-use Spreadsheet::WriteExcel;
 use Spreadsheet::ParseExcel::Utility qw(int2col);
+use Spreadsheet::WriteExcel;
 use Time::Local qw(timelocal);
 use YAML qw(Dump);
 
@@ -65,7 +64,7 @@ my %config_token = (
 );
 
 my %config_default = (
-    dir                 => $RealBin,
+    dir                 => $Bin,
     calendar_filesheet  => 'munkaido-nyilvantartas.ADATOK.xls[munkanaptár]',
     employee_filesheet  => 'munkaido-nyilvantartas.ADATOK.xls[dolgozók]',
     workday_filesheet   => 'munkaido-nyilvantartas.ADATOK.xls[hétköznap]',
@@ -88,40 +87,12 @@ my $NAME         = qr/\S+(?:\x20\S+)*/msx;
 my $ANY_DATE_RE0 = qr/\d+\D\d+\D\d+/msx;
 my $YM_RE        = qr/(\d{4}\D\d{2})/msx;
 
-my $SECS_PER_DAY = 24 * 60 * 60;
-
-my $_CONFIG = 'konfiguráció';
-my $_VALUE  = 'érték';
-
 my $FIRST_COL_NUMBER = 0;
 my $FIRST_ROW_NUMBER = 0;
+my $SECS_PER_DAY     = 24 * 60 * 60;
 
-my @_WDAYNAME = qw(
-    vasárnap
-    hétfő
-    kedd
-    szerda
-    csütörtök
-    péntek
-    szombat
-    vasárnap
-);
-my @_MONTHNAME = qw(
-    THE_ONLY_PLACE_WHERE_IT_IS_A_GOOD_IDEA_TO_START_MONTH_NUMBERING_AT_0
-    január
-    február
-    március
-    április
-    május
-    június
-    július
-    augusztus
-    szeptember
-    október
-    november
-    december
-);
-
+my $_CONFIG                = 'konfiguráció';
+my $_VALUE                 = 'érték';
 my $_MONTH                 = 'hónap';
 my $_EXT                   = 'fájlkiterjesztés';
 my $_EMPLOYEE_NAME         = 'dolgozónév';
@@ -130,6 +101,7 @@ my $_NO_SUCH               = 'nincs ilyen';
 my $_WORKSHEET             = 'munkalap';
 my $_ENV_VAR               = 'környezeti változó';
 my $_ALREADY_EXISTS        = 'már létezik';
+my $_FILENAME              = 'féjlnév';
 my $_NO                    = 'nincs';
 my $_MISSING               = 'hiányzik';
 my $_NOT                   = 'nem';
@@ -195,6 +167,32 @@ my $_SYS_USR_ERR_WEEKDAY_MOVED_WORKDAY_HOLIDAY =
     "$_SYS: hétköznapra áthelyezett munkanap (+szabadság)";
 my $_ERR_CANNOT_WRITE = 'nem lehet írni';
 my $_ERR_CANNOT_READ  = 'nem lehet olvasni';
+
+my @_WDAYNAME = qw(
+    vasárnap
+    hétfő
+    kedd
+    szerda
+    csütörtök
+    péntek
+    szombat
+    vasárnap
+);
+my @_MONTHNAME = qw(
+    THE_ONLY_PLACE_WHERE_IT_IS_A_GOOD_IDEA_TO_START_MONTH_NUMBERING_AT_0
+    január
+    február
+    március
+    április
+    május
+    június
+    július
+    augusztus
+    szeptember
+    október
+    november
+    december
+);
 
 my @_TO_BE_SUMMED = (
     $_WORKED_HOURS, $_PAID_SICKLEAVE_HOURS, $_PAID_VACATION_HOURS,
@@ -290,8 +288,8 @@ sub write_result {
     write_xls_via_template(
         {
             lol      => $out_lol,
-            template => get_fullpath($config{template_file}),
-            outfile  => get_fullpath($config{output_file}),
+            template => get_path($config{template_file}),
+            outfile  => get_path($config{output_file}),
             col_map  => sub {
                 my $fix_cols    = 3;
                 my $repeat_cols = 3;
@@ -512,14 +510,14 @@ sub get_subcase_hr {
     };
 }
 
-sub get_fullpath {
+sub get_path {
     my $file = shift // return;
     my $dir  = shift // $config{dir};
     my $worksheet = $file =~ s/(\[.*)$//msx ? $1 : q{};
     return +(
-          $file =~ m{^(?://|\\\\|[a-zA-Z]:[/\\])}msx
+          $file =~ m{^(?://|\\|[a-zA-Z]:)[/\\]}msx
         ? $file
-        : File::Spec->catfile($dir, $file)
+        : catfile($dir, $file)
     ) . $worksheet;
 }
 
@@ -539,14 +537,14 @@ sub get_config {
             $filesheet              => $hoh,
             do                      => \&terminate
         );
-        my $dir = dirname abs_path $config_file;
+        my $dir = dirname $config_file;
         for (keys %{$hoh}) {
             my $key = { reverse %config_token }->{$_};
             my $val = $hoh->{$_}{$_VALUE};
             $return{$key} = $val;
         }
         $return{dir} =
-            get_fullpath($return{dir}, dirname abs_path $config_file);
+            get_path($return{dir}, dirname $config_file);
     }
 
     elsif ($opt{config_file}) {
@@ -569,7 +567,7 @@ sub get_config {
 
 sub get_unnick {
     my $hr;  #return value
-    my $file = get_fullpath($config{employee_filesheet});
+    my $file = get_path($config{employee_filesheet});
     my $hoh  = filesheet_to_hoh($file);
     for my $employee_name (keys %{ $hoh // {} }) {
         for my $nick (split /\s*,\s*/msx,
@@ -586,8 +584,8 @@ sub get_unnick {
 
 sub get_calendar_hoh {
 
-    my $filesheet = get_fullpath($config{calendar_filesheet});
-    my $hoh       = filesheet_to_hoh($filesheet);              # return value
+    my $filesheet = get_path($config{calendar_filesheet});
+    my $hoh       = filesheet_to_hoh($filesheet);          # return value
     transform_keys_in_place(\&format_date, $hoh, $filesheet);
     diff_keys(
         $_DAYTYPE  => [ values %_DAYTYPE ],
@@ -601,7 +599,7 @@ sub get_calendar_hoh {
 sub get_vacation_hoh {
 
     my $hoh;  # return value
-    my $file        = get_fullpath($config{leave_register_file});
+    my $file        = get_path($config{leave_register_file});
     my $workbookhoh = file_to_workbookhoh($file);
 
     for my $sheet_name (sort keys %{$workbookhoh}) {
@@ -664,7 +662,7 @@ sub get_vacation_hoh {
 sub get_work_hours_hoh {
     my $hoh;  # return value
 
-    my $workday_filesheet = get_fullpath($config{workday_filesheet});
+    my $workday_filesheet = get_path($config{workday_filesheet});
     my $workday_sheethoh  = filesheet_to_hoh($workday_filesheet);
     for my $employee_name (sort keys %{$workday_sheethoh}) {
         my $rec = $workday_sheethoh->{$employee_name};
@@ -683,7 +681,7 @@ sub get_work_hours_hoh {
             }
         }
     }
-    my $saturday_filesheet = get_fullpath($config{saturday_filesheet});
+    my $saturday_filesheet = get_path($config{saturday_filesheet});
     my $saturday_sheethoh  = filesheet_to_sheethoh($saturday_filesheet);
 
     my @sat_employee_names;
@@ -881,9 +879,7 @@ s/^D*(\d{1,2})\D+(\d{1,2})\D+(\d\d\d\d)\D*/sprintf_y_m_d($3, $1, $2)/emsx
         if $x =~
         s/^\D*(\d\d\d\d)\D*(\d\d)\D*(\d\d)\D*/sprintf_y_m_d($1, $2, $3)/emsx
         ;  # HU
-     #return $x if $x =~ s/^\D*(\d\d)\D+(\d\d)\D+(\d\d\d\d)\D*/sprintf_y_m_d($3, $2, $1)/emsx;                                        # SK
-    terminate("$debug: $_INVALID $_DATE: $x");
-    return;  # for perlcritic
+    return terminate("$debug: $_INVALID $_DATE: $x");  # return for perlcritic
 }
 
 ### GENERAL DATE/TIME STUFF }
@@ -984,11 +980,18 @@ sub filesheet_to_sheethoh {
 sub file_to_workbook {
     my $file = shift // terminate();
 
-    $file =~ /[.]xls$/imsx or terminate("$_INVALID $_EXT: $file");
+    $file = straight_xls($file);
     return eval {
         my $parser = Spreadsheet::ParseExcel->new();
         $parser->parse($file) // die $parser->error() . "\n";
     } // terminate("$_ERR_CANNOT_READ: $file\n$@");
+}
+
+sub straight_xls {
+    my $file = shift;
+    my $p    = shift;
+    $file =~ /[.]xls$/imsx or terminate "$_INVALID $_EXT: $file";
+    return winfile($file, $p);
 }
 
 sub file_to_workbookhoh {
@@ -1024,40 +1027,48 @@ sub file_to_workbookhoh {
 sub write_xls_via_template {
     my $p = shift;
 
-    if (-e $p->{outfile} && !$opt{overwrite}) {
-        terminate("$_ALREADY_EXISTS: $p->{outfile}");
+    my $outfile = straight_xls($p->{outfile});
+    if (-e $outfile && !$opt{overwrite}) {
+        terminate("$_ALREADY_EXISTS: $outfile");
     }
 
     my %keep_cell = map { $_ => 1 } @{ $p->{keep_cells} // [] };
     my $lol = $p->{lol} // terminate();
 
     # Open the template with SaveParser
-    my $parser   = Spreadsheet::ParseExcel::SaveParser->new;
-    my $template = $parser->Parse($p->{template})
-        // terminate("$_ERR_CANNOT_READ: $p->{template}");
+    my $parser = Spreadsheet::ParseExcel::SaveParser->new;
+
+    my $template_file = straight_xls($p->{template});
+    my $template_book = $parser->Parse($template_file)
+        // terminate("$_ERR_CANNOT_READ: $template_file ($p->{template})");
     my $sheet      = 0;
-    my $format0    = $template->{Worksheet}[$sheet]{Cells}[1][0]{FormatNo};
+    my $format0    = $template_book->{Worksheet}[$sheet]{Cells}[1][0]{FormatNo};
     my $new_maxcol = 0;
     for my $row (0 .. $#{$lol}) {
         $new_maxcol = $#{ $lol->[$row] } if $new_maxcol <= $#{ $lol->[$row] };
     }
 
-    for my $row (0 .. max($#{$lol}, $template->{Worksheet}[$sheet]{MaxRow})) {
+    for my $row (
+        0 .. max($#{$lol}, $template_book->{Worksheet}[$sheet]{MaxRow}))
+    {
         for my $col (
-            0 .. max($#{ $lol->[$row] }, $template->{Worksheet}[$sheet]{MaxCol})
+            0 .. max(
+                $#{ $lol->[$row] }, $template_book->{Worksheet}[$sheet]{MaxCol}
+            )
             )
         {
             my $tmpl_col = transform($p->{col_map}, $col);
             my $tmpl_row = transform($p->{row_map}, $row);
             my $val = $lol->[$row][$col] // q{};
             my $tmpl_cell_obj =
-                $template->{Worksheet}[$sheet]{Cells}[$tmpl_row][$tmpl_col];
+                $template_book->{Worksheet}[$sheet]{Cells}[$tmpl_row]
+                [$tmpl_col];
             my $format = $tmpl_cell_obj->{FormatNo};
             if ($col <= $new_maxcol) {
                 if ($keep_cell{ row_col_to_cell($tmpl_row, $tmpl_col) }) {
                     $val = $tmpl_cell_obj->{_Value};
                 }
-                $template->AddCell(0, $row, $col, $val, $format);
+                $template_book->AddCell(0, $row, $col, $val, $format);
             }
             else {
                 $format = 0;
@@ -1065,10 +1076,10 @@ sub write_xls_via_template {
         }
     }
 
-    my $workbook = eval { $template->SaveAs($p->{outfile}) }
-        // terminate("$_ERR_CANNOT_WRITE: $p->{outfile}");
+    my $workbook = eval { $template_book->SaveAs($outfile) }
+        // terminate("$_ERR_CANNOT_WRITE: $outfile ($p->{outfile})");
     $workbook->close();
-    system "start $p->{outfile}" if $opt{start};
+    system start => $outfile if $opt{start};
     return;
 }
 
@@ -1109,6 +1120,12 @@ sub lol_to_txt {
 ### GENERAL SPREADSHEET/TABLE STUFF }
 
 ### GENERAL STUFF {
+
+sub winfile {
+    my $file = shift;
+    return $file if utf8::downgrade $file, my $fail_ok = 1;
+    return terminate "$_INVALID $_FILENAME: $file";  # return for perlcritic
+}
 
 sub max {
     my ($x, $y) = @_;
@@ -1164,8 +1181,6 @@ sub transform_keys_in_place {
         my $processed_key = transform($transformator, $key) // next;
         next if $processed_key eq $key;
         if (exists $hr->{$processed_key}) {
-
-            #terminate("$debug: $processed_key <> $key " . dump $hr);
             if (ref $hr->{$processed_key} eq 'HASH') {
                 $hr->{$key} = { %{ $hr->{$key} }, %{ $hr->{$processed_key} } };
             }
@@ -1194,16 +1209,15 @@ sub transform {
         return $sub->(@args) if 'CODE' eq ref $sub;
     }
 
-    terminate("$_INVALID transformator:" . dump $ref, @values);
-    return;  # fir perlcritic
+    return terminate("$_INVALID transformator:" . dump $ref, @values);  # critic
 }
 
 sub terminate {
     my @msg      = @_;
     my $longmess = undump(longmess);
     $longmess =~
-        s{[^\n]*(PAR[.]pm|PAR::|line\s0|at\s-e\s)[^\n]*\n?}{}gmsx;  # PAR
-    $longmess =~ s{script/}{}gmsx;                                  # PAR
+        s{[^\n]*(PAR[.]pm|PAR::|line\s0|at\s-e\s)[^\n]*\n?}{}gmsx;      # PAR
+    $longmess =~ s{script/}{}gmsx;                                      # PAR
 
     (my $base = $0) =~ s{.*?([^/\\]+)[.]\w+$}{$1}msx;
     $longmess =~ s/\sat\s\S*$base[.]\w+//gmsx;
@@ -1312,7 +1326,7 @@ sub build {
     my $s = $ENV{SystemRoot};
     (local $ENV{PATH} = "$s/system32;$p/bin;$p/perl/site/bin;$p/perl/bin") =~
         tr{/}{\\};
-    _qx("spp -o $exe $tmp");
+    _qx("pp -u -o $exe $tmp");
 
     stdout(_qx("$exe --version"));
 
